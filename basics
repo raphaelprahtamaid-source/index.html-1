@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Pokemon Card Database</title>
+
+<style>
+body{
+font-family:Arial;
+background:#f4f4f4;
+}
+
+#cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+}
+
+.card{
+background:white;
+padding:10px;
+border-radius:10px;
+text-align:center;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>Pokemon Card Database</h1>
+
+<input id="search" placeholder="Search Pokemon">
+
+<div id="cards"></div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
