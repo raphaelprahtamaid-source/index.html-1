@@ -1,0 +1,146 @@
+<title>Grade 9 Electricity Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: single reading column, question cards on a faint schematic grid, sticky score bar at the bottom */
+:root{
+  --bg:#f3f5f8; --grid:#e3e8ef; --surface:#ffffff; --fg:#17202b; --muted:#5a6676;
+  --line:#d3dae4; --accent:#1f5fbf; --accent-soft:#e6eefb;
+  --good:#1d7a46; --good-soft:#e3f4ea; --bad:#b3261e; --bad-soft:#fbe7e5;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"IBM Plex Sans",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141b; --grid:#18202a; --surface:#161d27; --fg:#e6ebf2; --muted:#93a0b2;
+  --line:#2a3442; --accent:#7aa8f0; --accent-soft:#1b2a40;
+  --good:#5fd08f; --good-soft:#15291f; --bad:#f08a82; --bad-soft:#2e1816; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f141b; --grid:#18202a; --surface:#161d27; --fg:#e6ebf2; --muted:#93a0b2;
+  --line:#2a3442; --accent:#7aa8f0; --accent-soft:#1b2a40;
+  --good:#5fd08f; --good-soft:#15291f; --bad:#f08a82; --bad-soft:#2e1816; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 120px}
+main{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header{display:flex;flex-direction:column;gap:6px;padding-bottom:8px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--display);font-size:clamp(28px,6vw,38px);line-height:1.15;margin:0;text-wrap:balance}
+.meta{color:var(--muted);font-size:14px;margin:0}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.q-head{display:flex;gap:12px;align-items:baseline}
+.num{font-family:var(--mono);font-size:13px;color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:4px;flex:none}
+.stem{margin:0;font-weight:500;min-width:0}
+.list{margin:0;padding-left:22px;color:var(--fg)}
+.list li{padding-left:4px}
+.opts{display:flex;flex-direction:column;gap:8px;border:0;margin:0;padding:0}
+.opt{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;transition:background .15s,border-color .15s}
+.opt:hover{border-color:var(--accent)}
+.opt input{accent-color:var(--accent);margin:0;flex:none;width:18px;height:18px}
+.opt .k{font-family:var(--mono);font-size:13px;color:var(--muted);width:16px;flex:none}
+.opt:has(input:checked){background:var(--accent-soft);border-color:var(--accent)}
+.opt:has(input:focus-visible){outline:2px solid var(--accent);outline-offset:2px}
+.graded .opt{cursor:default}
+.graded .opt.correct{background:var(--good-soft);border-color:var(--good)}
+.graded .opt.wrong{background:var(--bad-soft);border-color:var(--bad)}
+.fb{font-size:14px;border-top:1px dashed var(--line);padding-top:10px;color:var(--muted)}
+.fb strong{color:var(--fg)}
+.fb .ok{color:var(--good);font-weight:600}.fb .no{color:var(--bad);font-weight:600}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
+  padding-block:12px calc(12px + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.bar-in{max-width:720px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.status{font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:8px}
+button{font:600 15px var(--body);border-radius:8px;padding:10px 18px;cursor:pointer;border:1px solid var(--accent)}
+button.primary{background:var(--accent);color:var(--surface)}
+button.ghost{background:transparent;color:var(--accent)}
+button:disabled{opacity:.45;cursor:not-allowed}
+button:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.result{background:var(--surface);border:1px solid var(--accent);border-radius:10px;padding:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.result .big{font-family:var(--display);font-size:40px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Physics · Grade 9 · Semester 1</span>
+    <h1>Electricity Practice Quiz</h1>
+    <p class="meta">10 multiple-choice questions taken word for word from the Joint Summative Assessment 2025/2026 (Main). Pick one answer for each, then press Check answers.</p>
+  </header>
+  <div id="result" class="result" hidden></div>
+  <form id="quiz"></form>
+</main>
+
+<div class="bar"><div class="bar-in">
+  <span class="status" id="status">0 / 10 answered</span>
+  <div class="btns">
+    <button type="button" class="ghost" id="reset">Start over</button>
+    <button type="button" class="primary" id="check">Check answers</button>
+  </div>
+</div></div>
+
+<script>
+const Q=[
+ {n:"01",stem:"Read the following statements.",list:["the flow of electrons in a closed circuit","It flows from the positive pole to the negative pole","It flows from high potential to low potential","It flows from low potential to high potential"],
+  ask:"From the statements above, the correct statement about conventional electric current is indicated by number...",
+  opts:["1 and 2","1 and 3","2 and 3","2 and 4"],a:2,why:"Conventional current flows from the positive pole to the negative pole, from high potential to low potential (2 and 3). Electrons flow the opposite way."},
+ {n:"04",stem:"Read the following sources of electric current.",list:["battery","accumulator","voltaic cell","power bank"],
+  ask:"The primary current source are indicated by the numbers...",
+  opts:["1 and 2","1 and 3","2 and 3","2 and 4"],a:1,why:"Primary cells cannot be recharged: the battery (dry cell) and the voltaic cell. Accumulators and power banks are secondary (rechargeable)."},
+ {n:"10",stem:"The ends of a conductor are connected to a 6 volts of voltage to light a lamp with a 0.25 A of current. If the expected current flowing through the lamp is 0.4 A, then the voltage that must be connected to the ends of the conductor is...",
+  opts:["9.6 volt","7.5 volt","6.0 volt","3.2 volt"],a:0,why:"R = V / I = 6 / 0.25 = 24 Ω. V = I × R = 0.4 × 24 = 9.6 V."},
+ {n:"11",stem:"See the following quantities.",list:["length of wire","cross-sectional area of wire","type of wire","mass of wire"],
+  ask:"Factors that influence the resistance of a conductor wire are…",
+  opts:["1, 2 and 3","1, 2 and 4","1, 3 and 4","2, 3 and 4"],a:0,why:"R = ρ × L / A: length (L), cross-sectional area (A) and the type of material (ρ). Mass is not in the formula."},
+ {n:"18",stem:"Look at the following equations.",list:["W = P × t","W = V × R × t","W = I² × R × t","W = (V² / R) × t"],
+  ask:"The correct equation of electrical energy is…",
+  opts:["1, 2, and 3","1, 2, and 4","1, 3, and 4","2, 3, and 4"],a:2,why:"W = P × t, W = I²Rt and W = (V²/R)t are all valid. W = V × R × t is not (it should be V × I × t)."},
+ {n:"19",stem:"An incandescent light bulb has a specification of 220 V/60 W. If the light bulb is brought to another country and installed at 110 V, the lamp's current electrical power is…",
+  opts:["240 W","120 W","60 W","15 W"],a:3,why:"P₂ = (V₂ / V₁)² × P₁ = (110 / 220)² × 60 = ¼ × 60 = 15 W."},
+ {n:"20",stem:"A light bulb with 100 W of electric power is turned on for 10 hours every day for a month (30 days). The amount of electrical energy used in kilowatt-hours (kWh) is…",
+  opts:["10 kWh","30 kWh","300 kWh","30 000 kWh"],a:1,why:"W = 0.1 kW × 10 h × 30 = 30 kWh."},
+ {n:"22",stem:"Two lamps with resistances of R₁ = 3 Ω and R₂ = 9 Ω are connected in series and connected to a 12 V voltage source. The power output of lamp 1 (R₁) is…",
+  opts:["1 W","2 W","3 W","4 W"],a:2,why:"R total = 3 + 9 = 12 Ω, so I = 12 / 12 = 1 A. P₁ = I² × R₁ = 1² × 3 = 3 W."},
+ {n:"24",stem:"A water heater with 400 watt of electrical power is used to heat 2 liters (2 kg) of water for 14 minutes. The temperature increase achieved by water if the specific heat capacity of water is 4200 J/kg°C is…",
+  opts:["80°C","40°C","6°C","4°C"],a:1,why:"W = P × t = 400 × 840 s = 336 000 J. ΔT = W / (m × c) = 336 000 / (2 × 4200) = 40°C."},
+ {n:"25",stem:"A computer in an office uses a 50 watt of electric power monitor, a 150 watt of electric power CPU, and 20 watt of electric power speakers. If the computer is used for 40 hours a week, the amount of electrical energy used for that week is…",
+  opts:["220 kWh","61.6 kWh","8.8 kWh","2.2 kWh"],a:2,why:"Total power = 50 + 150 + 20 = 220 W = 0.22 kW. W = 0.22 × 40 = 8.8 kWh."}
+];
+const L="ABCD", form=document.getElementById("quiz"), statusEl=document.getElementById("status"),
+      checkBtn=document.getElementById("check"), resultEl=document.getElementById("result");
+let graded=false;
+function esc(s){return s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+form.innerHTML=Q.map((q,i)=>`
+ <section class="q" id="q${i}">
+  <div class="q-head"><span class="num">${i+1}</span><p class="stem">${esc(q.stem)}</p></div>
+  ${q.list?`<ol class="list">${q.list.map(x=>`<li>${esc(x)}</li>`).join("")}</ol><p class="stem">${esc(q.ask)}</p>`:""}
+  <fieldset class="opts" aria-label="Question ${i+1} options">
+   ${q.opts.map((o,j)=>`<label class="opt" data-j="${j}"><input type="radio" name="q${i}" id="q${i}o${j}" value="${j}"><span class="k">${L[j]}.</span><span>${esc(o)}</span></label>`).join("")}
+  </fieldset>
+  <div class="fb" hidden></div>
+ </section>`).join("");
+form.style.display="flex";form.style.flexDirection="column";form.style.gap="20px";
+function answers(){return Q.map((_,i)=>{const c=form.querySelector(`input[name=q${i}]:checked`);return c?+c.value:null})}
+function update(){const n=answers().filter(x=>x!==null).length;if(!graded)statusEl.textContent=`${n} / 10 answered`}
+form.addEventListener("change",update);
+checkBtn.addEventListener("click",()=>{
+  const ans=answers();let score=0;graded=true;
+  Q.forEach((q,i)=>{
+    const sec=document.getElementById("q"+i),fb=sec.querySelector(".fb"),ok=ans[i]===q.a;if(ok)score++;
+    sec.classList.add("graded");
+    sec.querySelectorAll(".opt").forEach(l=>{const j=+l.dataset.j;l.querySelector("input").disabled=true;
+      if(j===q.a)l.classList.add("correct");else if(j===ans[i])l.classList.add("wrong");});
+    fb.innerHTML=`${ans[i]===null?'<span class="no">Not answered.</span>':ok?'<span class="ok">Correct.</span>':'<span class="no">Incorrect.</span>'} <strong>Answer: ${L[q.a]}.</strong> ${esc(q.why)}`;
+    fb.hidden=false;
+  });
+  statusEl.textContent=`Score: ${score} / 10`;checkBtn.disabled=true;
+  resultEl.innerHTML=`<span class="big">${score*10}</span><div><strong>${score} of 10 correct</strong><br><span class="meta">${score>=8?"Great work. You have this chapter under control.":score>=5?"Good start. Read the worked answers for the ones you missed.":"Review current, resistance and electrical energy, then try again."}</span></div>`;
+  resultEl.hidden=false;window.scrollTo({top:0,behavior:"smooth"});
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  graded=false;checkBtn.disabled=false;resultEl.hidden=true;
+  form.querySelectorAll(".q").forEach(s=>{s.classList.remove("graded");s.querySelector(".fb").hidden=true;
+    s.querySelectorAll(".opt").forEach(l=>{l.classList.remove("correct","wrong");const inp=l.querySelector("input");inp.disabled=false;inp.checked=false;});});
+  update();window.scrollTo({top:0,behavior:"smooth"});
+});
+</script>
